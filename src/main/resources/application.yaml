@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: trackingnumber-demo-app
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+server:
+  port: 8080
+  servlet:
+    context-path: /ext-api
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    info:
+      enabled: true
+    health:
+      showDetails: always
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          redis: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+
+
